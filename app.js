@@ -13,8 +13,14 @@ let travelLog = [
 
 let inputVar;
 
+let docInput = document.querySelector("#input")
+let positionxDisplay = document.querySelector("#positionx")
+let positionyDisplay = document.querySelector("#positiony")
+let htmlTable = document.querySelector("#table")
+let commandLog = []
+
 let grid = [
-  [0,0,0,0,0,0,0,0,0,0],
+  [2,0,0,0,0,0,0,0,0,0],
   [0,0,0,0,0,0,0,0,0,0],
   [0,0,0,0,0,0,0,0,0,0],
   [0,0,0,0,0,0,0,0,0,0],
@@ -34,11 +40,7 @@ let grid = [
 // grid[5[3]]
 
 
-let docInput = document.querySelector("#input")
-let positionxDisplay = document.querySelector("#positionx")
-let positionyDisplay = document.querySelector("#positiony")
-let htmlTable = document.querySelector("#table")
-let commandLog = []
+
 setDisplay();
 
 function submit(UserInput) {
@@ -54,6 +56,10 @@ function gridDisplayer(){
   console.log(grid)
 }
 
+function gridPath(){
+  grid[rover.y][rover.x] = 1;
+}
+
 updateVisibleTable("new")
 updateVisibleTable()
 
@@ -65,16 +71,20 @@ for(let row of grid){
   table.insertRow();
   for(let cell of row) {
     let newCell = table.rows[table.rows.length -1].insertCell();
-    newCell.textContent = cell;
+    // newCell.textContent = cell;
+    if(cell == 2){
+      newCell.style.backgroundColor = "red"
+    }else if(cell == 1){
+      newCell.style.backgroundColor = "orange"
+    }
   }
 }
 
-if(state == "new"){document.body.appendChild(table);
+if(state == "new"){htmlTable.appendChild(table);
 }else 
 {
-  let docTable = document.querySelector("table")
-  document.body.removeChild("docTable")
-  document.body.appendChild(table)
+  htmlTable.removeChild(htmlTable.childNodes[0])
+  htmlTable.appendChild(table)
 }
 };
 // //end (works the first time but then only appends)
@@ -90,7 +100,7 @@ function reset(){
   directionCounter = 0;
   commandLog = []
   grid = [
-    [0,0,0,0,0,0,0,0,0,0],
+    [2,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0],
@@ -102,6 +112,7 @@ function reset(){
     [0,0,0,0,0,0,0,0,0,0],
   ]
   setDisplay();
+  updateVisibleTable();
 }
 
 function setDisplay(){
@@ -128,6 +139,8 @@ function turn(direction) {
 
 function forward() {
 
+  gridPath();
+
   switch (rover.direction) {
     case "N":
       rover.y -= 1;
@@ -150,6 +163,8 @@ function forward() {
 }
 
 function backwards() {
+
+  gridPath()
 
   switch (rover.direction) {
     case "N":
